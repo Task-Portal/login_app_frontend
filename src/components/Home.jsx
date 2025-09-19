@@ -3,10 +3,7 @@ import Header from "./Header";
 import "../styles/home.css";
 import backImg1 from "../img/1.png";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 function Home(props) {
-
-   
   const navigate = useNavigate();
   const handleBtn = (param) => {
     navigate(`/${param}`);
