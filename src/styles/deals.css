@@ -1,0 +1,120 @@
+.deals-container {
+  width: 100%;
+  padding: 16px;
+}
+
+.deals-title {
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 121%;
+  color: #b29f7e;
+  margin-bottom: 16px;
+  cursor: pointer;
+}
+
+.deals-header {
+  width: 100%;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(630px, 1fr)); /* responsive */
+  gap: 20px;
+}
+
+.grid-item {
+  display: flex;
+  flex-direction: column;
+  min-height: 250px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  color: white;
+}
+
+.title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap; /* allow stacking on small screens */
+  padding: 20px;
+  width: 100%;
+
+  margin-top: auto;
+}
+
+.title-subcontainer {
+  flex: 1;
+  font-family: "Lato", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 122%;
+  min-width: 120px;
+}
+
+.inner-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.inner-container-title {
+  font-family: "Merriweather", sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 170%;
+}
+
+.title-subcontainer-yield-days {
+  margin-top: auto;
+  margin-left: 36px;
+}
+
+.title-subcontainer-days {
+  margin-top: 4px;
+}
+
+.title-container-sold {
+  margin-top: 38px;
+  margin-left: 30px;
+}
+
+/*  Mobile adjustments */
+@media (max-width: 767px) {
+  .deals-title {
+    font-size: 20px;
+  }
+
+  .title-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .inner-container-title {
+    font-size: 16px;
+  }
+
+  .title-subcontainer {
+    font-size: 14px;
+  }
+  .title-container-sold, .title-subcontainer-yield-days {
+    margin: 0;
+  }
+}
+
+/*  Desktop adjustments */
+@media (min-width: 768px) {
+  .deals-container {
+    max-width: 1328px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  .deals-title {
+    font-size: 28px;
+  }
+
+  .grid-item {
+    min-height: 400px;
+  }
+}
