@@ -8,9 +8,11 @@ export default function ResetPassword() {
   const token = searchParams.get("token");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isDisabled, setIsDisabled] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
+    setIsDisabled(true);
     e.preventDefault();
     try {
       const res = await axios.post(
@@ -45,7 +47,7 @@ export default function ResetPassword() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button type="submit" className="auth-button">
+          <button type="submit" className="auth-button" disabled={isDisabled}>
             Reset Password
           </button>
         </form>

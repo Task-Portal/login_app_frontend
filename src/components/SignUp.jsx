@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
 import Spinner from "./Spinner";
@@ -12,39 +12,33 @@ import { useForm } from "react-hook-form";
 
 function SignUp() {
   // redux
-  const { loading, error, success } = useSelector(
-    (state) => state.auth
-  );
+  const { loading, error, success } = useSelector((state) => state.auth);
 
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
-
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+  const password = watch("password");
   const navigate = useNavigate();
-  const [msg_error, setError] = useState("");
 
   useEffect(() => {
     if (success) {
-      setError("");
       navigate("/profile");
     }
-    if (error) {
-      setError(error);
-    }
-  }, [navigate, success, error]);
+  }, [navigate, success]);
 
   const handleBtn = (param) => {
     navigate(`/${param}`);
   };
 
   const submitForm = (data) => {
-    setError("");
-    if (data.password !== data.confirmPassword) {
-      setError("Password mismatch");
-      return
-    }
-    console.log("data: ", data);
-    data.email = data.email.toLowerCase();
-    dispatch(registerUser(data));
+    const { confirmPassword, ...userData } = data;
+
+    userData.email = userData.email.toLowerCase();
+    dispatch(registerUser(userData));
   };
 
   return (
@@ -73,9 +67,17 @@ function SignUp() {
                 id="email"
                 className="form-input"
                 placeholder="Email"
-                {...register("email")}
-                required
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address",
+                  },
+                })}
               />
+              {errors.email && (
+                <p className="error-message">{errors.email.message}</p>
+              )}
             </div>
             <div className="email-container">
               <label htmlFor="username">Username</label>
@@ -84,9 +86,13 @@ function SignUp() {
                 id="username"
                 className="form-input"
                 placeholder="Username"
-                {...register("username")}
-                required
+                {...register("username", {
+                  required: "Username is required",
+                })}
               />
+              {errors.username && (
+                <p className="error-message">{errors.username.message}</p>
+              )}
             </div>
             <div className="pass-container ">
               <label htmlFor="password">Password</label>
@@ -95,9 +101,17 @@ function SignUp() {
                 id="password"
                 className="form-input"
                 placeholder="Password"
-                {...register("password")}
-                required
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 8,
+                    message: "Password must be at least 8 characters",
+                  },
+                })}
               />
+              {errors.password && (
+                <p className="error-message">{errors.password.message}</p>
+              )}
             </div>
 
             <div className="pass-container ">
@@ -107,28 +121,37 @@ function SignUp() {
                 id="confirmPassword"
                 className="form-input"
                 placeholder="Confirm Password"
-                {...register("confirmPassword")}
-                required
+                {...register("confirmPassword", {
+                  required: "Please confirm your password",
+                  validate: (value) =>
+                    value === password || "Password do not match. ",
+                })}
               />
+              {errors.confirmPassword && (
+                <p className="error-message">
+                  {errors.confirmPassword.message}
+                </p>
+              )}
             </div>
-            {msg_error ? (
+            {error ? (
               <div className="error-message">
-                <p>{msg_error}</p>
+                <p>{error}</p>
               </div>
             ) : null}
             <div>
-              <button className="sing-in-btn" type="submit">
-                Sing Up{" "}
+              <button className="sing-in-btn" type="submit" disabled={loading}>
+                {loading ? <Spinner /> : "Sing Up"}
               </button>
             </div>
             <div className="after-sing-in-btn">
-              Don you have an account?{" "}
-              <span
-                className="sing-up-request"
+              Don you have an account?
+              <button
+                type="button"
+                className="link-button sing-up-request"
                 onClick={() => handleBtn("login")}
               >
-                {loading ? <Spinner /> : "Sign in"}
-              </span>
+                Sign in
+              </button>
             </div>
           </form>
         </section>

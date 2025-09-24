@@ -11,7 +11,11 @@ import "../styles/login.css";
 function Login() {
   const { loading, error, userToken } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -54,9 +58,17 @@ function Login() {
                 id="email"
                 className="form-input"
                 placeholder="Email"
-                {...register("email")}
-                required
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address",
+                  },
+                })}
               />
+              {errors.email && (
+                <p className="error-message">{errors.email.message}</p>
+              )}
             </div>
             <div className="pass-container">
               <label htmlFor="pass">Password</label>
@@ -65,36 +77,42 @@ function Login() {
                 id="pass"
                 className="form-input"
                 placeholder="Password"
-                {...register("password")}
-                required
+                {...register("password", {
+                  required: "Password is required",
+                })}
               />
+              {errors.password && (
+                <p className="error-message">{errors.password.message}</p>
+              )}
             </div>
-            <div
+            <button
+              type="button"
               className="forget-password"
               onClick={() => {
                 navigate("/forgot-password");
               }}
             >
               Forgot password
-            </div>
+            </button>
             {error ? (
               <div className="error-message">
                 <p>{error}</p>
               </div>
             ) : null}
             <div>
-              <button className="sing-in-btn" type="submit">
+              <button className="sing-in-btn" type="submit" disabled={loading}>
                 {loading ? <Spinner /> : "Sing In"}
               </button>
             </div>
             <div className="after-sing-in-btn">
               Don’t have account?{" "}
-              <span
-                className="sing-up-request"
+              <button
+                type="button"
+                className="link-button sing-up-request"
                 onClick={() => handleBtn("signup")}
               >
                 Sign Up
-              </span>
+              </button>
             </div>
           </form>
         </section>

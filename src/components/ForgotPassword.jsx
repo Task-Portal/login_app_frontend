@@ -6,10 +6,12 @@ import "../styles/auth.css";
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [isDisabled, setIsDisabled] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsDisabled(true);
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}/api/users/forgot-password`,
@@ -44,7 +46,7 @@ export default function ForgotPassword() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <button type="submit" className="auth-button">
+          <button type="submit" className="auth-button" disabled={isDisabled}>
             Send Reset Link
           </button>
         </form>
