@@ -57,7 +57,8 @@
   padding: 12px 20px;
   margin-top: 15px;
   border: none;
-  border-radius: 50px;
+  border-radius: 10px;
+  width: 250px;
   cursor: pointer;
   transition: background 0.3s;
 }
@@ -79,10 +80,19 @@
   align-items: flex-start;
 }
 .back-btn {
-  font-size: 32px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
   cursor: pointer;
-  text-align: left;
-  color: #172234;
+  padding: 0;
+  line-height: 1;
+}
+
+.success {
+  color: rgb(5, 87, 11);
+  font-size: 16px;
+  font-weight: bold;
+  padding-top: 5px;
 }
 
 /* 📱 Mobile responsiveness */

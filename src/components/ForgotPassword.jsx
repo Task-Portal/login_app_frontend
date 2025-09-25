@@ -1,35 +1,32 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useForm } from "react-hook-form";
 import "../styles/auth.css";
+import { useDispatch, useSelector } from "react-redux";
+import { forgotPassword } from "../redux/auth/authActions";
+
+import Spinner from "./Spinner";
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState("");
-  const [message, setMessage] = useState("");
-  const [isDisabled, setIsDisabled] = useState(false);
+  const { loading, error, message } = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsDisabled(true);
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/api/users/forgot-password`,
-        { email }
-      );
-      setMessage(res.data.message);
-    } catch (err) {
-      setMessage(err.response?.data?.message || "Something went wrong");
-    }
+  const submitForm = async (data) => {
+    dispatch(forgotPassword(data));
   };
 
   return (
     <div className="auth-container">
       <div className="auth-box">
         <div className="arrow-container">
-          <span onClick={() => navigate(-1)} className="back-btn">
+          <button onClick={() => navigate(-1)} className="back-btn">
             &larr;
-          </span>
+          </button>
         </div>
 
         <h2 className="auth-title">Forgot Password</h2>
@@ -37,20 +34,28 @@ export default function ForgotPassword() {
           Enter your email address and we’ll send you a link to reset your
           password.
         </p>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(submitForm)}>
           <input
             type="email"
             className="auth-input"
             placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
+            {...register("email", {
+              required: "Email is required",
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: "Invalid email address",
+              },
+            })}
           />
-          <button type="submit" className="auth-button" disabled={isDisabled}>
-            Send Reset Link
+          {errors.email && (
+            <p className="error-message">{errors.email.message}</p>
+          )}
+          <button type="submit" className="auth-button" disabled={loading}>
+            {loading ? <Spinner /> : "Send Reset Link"}
           </button>
         </form>
-        {message && <p className="auth-message">{message}</p>}
+        {message && <p className="auth-message success">{message}</p>}
+        {error && <p className="error-message">{error}</p>}
       </div>
     </div>
   );
